@@ -1,5 +1,6 @@
 // import modules
-require('dotenv').config()
+require('dotenv'.config()
+const querystring =require('querystring');
 const express = require('express')
 const request = require('request')
 const bodyParser = require('body-parser')
@@ -16,19 +17,19 @@ app.use(bodyParser.urlencoded({
   extended: true
 })) // for parsing application/x-www-form-urlencoded
 
-const getReplyMessage = query => {
+const getReplyMessage = async query => {
   const url = `https://api.a3rt.recruit-tech.co.jp/talk/v1/smalltalk`;
   const data = {
     apikey: A3RT_API_KEY,
     query
   };
-  //const result = await axios.post(url, data);
+  const result = await axios.post(url, querystring.srtigify(data)).catch(e => e);
 
-  return result.message;
+  return result.data.results[0].reply;
 }
 
-app.post('/callback', (req, res) => {
-  //const message = await getReplyMessage(req.body.events[0].message.text);
+app.post('/callback', async (req, res) => {
+  const message = await getReplyMessage(req.body.events[0].message.text);
   const options = {
     method: 'POST',
     uri: 'https://api.line.me/v2/bot/message/reply',
@@ -36,7 +37,7 @@ app.post('/callback', (req, res) => {
       replyToken: req.body.events[0].replyToken,
       messages: [{
         type: 'text',
-        text: req.body.events[0].message.text
+        text: message
       }]
     },
     auth: {
