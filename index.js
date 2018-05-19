@@ -1,5 +1,5 @@
 // import modules
-require('dotenv'.config()
+require('dotenv'.config());
 const querystring =require('querystring');
 const express = require('express')
 const request = require('request')
