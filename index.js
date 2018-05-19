@@ -16,19 +16,19 @@ app.use(bodyParser.urlencoded({
   extended: true
 })) // for parsing application/x-www-form-urlencoded
 
-const getReplyMessage = async query => {
+const getReplyMessage = query => {
   const url = `https://api.a3rt.recruit-tech.co.jp/talk/v1/smalltalk`;
   const data = {
     apikey: A3RT_API_KEY,
     query
   };
-  const result = await axios.post(url, data);
+  //const result = await axios.post(url, data);
 
   return result.message;
 }
 
-app.post('/callback', async (req, res) => {
-  const message = await getReplyMessage(req.body.events[0].message.text);
+app.post('/callback', (req, res) => {
+  //const message = await getReplyMessage(req.body.events[0].message.text);
   const options = {
     method: 'POST',
     uri: 'https://api.line.me/v2/bot/message/reply',
@@ -36,7 +36,7 @@ app.post('/callback', async (req, res) => {
       replyToken: req.body.events[0].replyToken,
       messages: [{
         type: 'text',
-        text: message
+        text: req.body.events[0].message.text
       }]
     },
     auth: {
