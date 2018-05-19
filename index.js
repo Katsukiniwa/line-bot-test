@@ -23,7 +23,7 @@ const getReplyMessage = async query => {
     apikey: A3RT_API_KEY,
     query
   };
-  const result = await axios.post(url, querystring.srtigify(data)).catch(e => e);
+  const result = await axios.post(url, querystring.stringify(data)).catch(e => e);
 
   return result.data.results[0].reply;
 }
